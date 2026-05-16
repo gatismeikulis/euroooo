@@ -900,12 +900,11 @@ function highlightUsedOptions() {
     const currentVal = parseInt(select.value);
     select.querySelectorAll('option').forEach(opt => {
       const val = parseInt(opt.value);
-      if (val && usedPositions.has(val) && val !== currentVal) {
-        opt.style.backgroundColor = '#ffe0e0';
-        opt.style.color = '#aa3333';
+      if (!val) return;
+      if (usedPositions.has(val) && val !== currentVal) {
+        opt.textContent = `${val} ✗`;
       } else {
-        opt.style.backgroundColor = '';
-        opt.style.color = '';
+        opt.textContent = `${val}`;
       }
     });
   });
