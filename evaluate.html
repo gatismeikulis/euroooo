@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eurovision 2026 - Results Evaluator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: #1a1a2e;
+    color: #eee;
+    padding: 2rem 1rem;
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    text-align: center;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    background: linear-gradient(90deg, #ff006e, #ffbe0b, #06d6a0, #8338ec);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Steps */
+  .step {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .step h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #ffbe0b;
+    margin-bottom: 0.8rem;
+  }
+
+  .step p {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-bottom: 0.8rem;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 0.8rem;
+    color: #eee;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    resize: vertical;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: #8338ec;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.7rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    margin-top: 0.8rem;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-primary { background: linear-gradient(135deg, #8338ec, #ff006e); }
+  .btn-success { background: linear-gradient(135deg, #06d6a0, #118ab2); }
+
+  /* Results table */
+  .results-section { display: none; }
+  .results-section.visible { display: block; }
+
+  .leaderboard {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  .leaderboard th {
+    background: linear-gradient(135deg, #8338ec, #ff006e);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    padding: 0.8rem;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  .leaderboard td {
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.9rem;
+  }
+
+  .leaderboard tbody tr:hover {
+    background: rgba(255,255,255,0.05);
+  }
+
+  .leaderboard .rank { font-family: 'Fredoka One', cursive; font-size: 1.1rem; }
+  .leaderboard .rank-1 { color: #ffd700; }
+  .leaderboard .rank-2 { color: #c0c0c0; }
+  .leaderboard .rank-3 { color: #cd7f32; }
+
+  .medal { font-size: 1.3rem; margin-right: 0.3rem; }
+
+  .score { color: #06d6a0; font-weight: 600; }
+
+  /* Detail toggle */
+  .detail-toggle {
+    color: #8338ec;
+    cursor: pointer;
+    font-size: 0.8rem;
+    text-decoration: underline;
+  }
+
+  .detail-row { display: none; }
+  .detail-row.visible { display: table-row; }
+
+  .detail-row td {
+    padding: 0.5rem 0.8rem;
+    background: rgba(0,0,0,0.2);
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+
+  .detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+
+  .detail-table td {
+    padding: 0.3rem 0.5rem;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .detail-table .exact { color: #06d6a0; font-weight: 600; }
+  .detail-table .close { color: #ffbe0b; }
+  .detail-table .far { color: #ff006e; }
+
+  .scoring-info {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+  }
+
+  .error-msg {
+    color: #ff006e;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  .error-msg.visible { display: block; }
+
+  /* Actual results grid */
+  .actual-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+
+  .actual-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,0,0,0.2);
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+  }
+
+  .actual-row .country-label {
+    flex: 1;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .actual-row input {
+    width: 50px;
+    padding: 0.3rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    color: #eee;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+  }
+
+  .actual-row input:focus {
+    outline: none;
+    border-color: #06d6a0;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem 0.5rem; }
+    .step { padding: 1rem; }
+    .actual-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Eurovision 2026 Results Evaluator</h1>
+
+  <!-- Step 1: Paste forecasts -->
+  <div class="step">
+    <h2>Step 1: Paste Forecast Data</h2>
+    <p>Copy the "answers" column from your Google Sheet responses. One JSON per line.</p>
+    <textarea id="forecasts-input" placeholder='Paste the raw data from Google Sheets here. Each row should contain participant info including their forecast JSON...'></textarea>
+    <div class="error-msg" id="parse-error"></div>
+    <br>
+    <button class="btn btn-primary" id="btn-parse">Parse Forecasts</button>
+    <span id="parse-status" style="margin-left:1rem; font-size:0.85rem; color:#06d6a0;"></span>
+  </div>
+
+  <!-- Step 2: Actual results -->
+  <div class="step">
+    <h2>Step 2: Enter Actual Results</h2>
+    <p>Enter the actual finishing position for each country.</p>
+    <div class="actual-grid" id="actual-grid"></div>
+    <br>
+    <button class="btn btn-success" id="btn-evaluate" disabled>Evaluate & Rank!</button>
+  </div>
+
+  <!-- Results -->
+  <div class="results-section" id="results-section">
+    <div class="step">
+      <h2>Leaderboard</h2>
+      <table class="leaderboard">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Score</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+      <div class="scoring-info">
+        <strong>Scoring:</strong> For each country, the difference between predicted and actual position is calculated.
+        Exact match = 0 points. Total score = sum of all differences. <strong>Lowest score wins.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const COUNTRIES = [
+  { country: "Denmark", flag: "\ud83c\udde9\ud83c\uddf0" },
+  { country: "Germany", flag: "\ud83c\udde9\ud83c\uddea" },
+  { country: "Israel", flag: "\ud83c\uddee\ud83c\uddf1" },
+  { country: "Belgium", flag: "\ud83c\udde7\ud83c\uddea" },
+  { country: "Albania", flag: "\ud83c\udde6\ud83c\uddf1" },
+  { country: "Greece", flag: "\ud83c\uddec\ud83c\uddf7" },
+  { country: "Ukraine", flag: "\ud83c\uddfa\ud83c\udde6" },
+  { country: "Australia", flag: "\ud83c\udde6\ud83c\uddfa" },
+  { country: "Serbia", flag: "\ud83c\uddf7\ud83c\uddf8" },
+  { country: "Malta", flag: "\ud83c\uddf2\ud83c\uddf9" },
+  { country: "Czechia", flag: "\ud83c\udde8\ud83c\uddff" },
+  { country: "Bulgaria", flag: "\ud83c\udde7\ud83c\uddec" },
+  { country: "Croatia", flag: "\ud83c\udded\ud83c\uddf7" },
+  { country: "United Kingdom", flag: "\ud83c\uddec\ud83c\udde7" },
+  { country: "France", flag: "\ud83c\uddeb\ud83c\uddf7" },
+  { country: "Moldova", flag: "\ud83c\uddf2\ud83c\udde9" },
+  { country: "Finland", flag: "\ud83c\uddeb\ud83c\uddee" },
+  { country: "Poland", flag: "\ud83c\uddf5\ud83c\uddf1" },
+  { country: "Lithuania", flag: "\ud83c\uddf1\ud83c\uddf9" },
+  { country: "Sweden", flag: "\ud83c\uddf8\ud83c\uddea" },
+  { country: "Cyprus", flag: "\ud83c\udde8\ud83c\uddfe" },
+  { country: "Italy", flag: "\ud83c\uddee\ud83c\uddf9" },
+  { country: "Norway", flag: "\ud83c\uddf3\ud83c\uddf4" },
+  { country: "Romania", flag: "\ud83c\uddf7\ud83c\uddf4" },
+  { country: "Austria", flag: "\ud83c\udde6\ud83c\uddf9" }
+];
+
+let participants = [];
+
+// Build actual results grid
+const grid = document.getElementById('actual-grid');
+COUNTRIES.forEach(c => {
+  const row = document.createElement('div');
+  row.className = 'actual-row';
+  row.innerHTML = `<span class="country-label">${c.flag} ${c.country}</span><input type="number" min="1" max="25" data-country="${c.country}" placeholder="#">`;
+  grid.appendChild(row);
+});
+
+// Check if all actual positions filled
+grid.addEventListener('input', () => {
+  const inputs = grid.querySelectorAll('input');
+  const allFilled = [...inputs].every(i => i.value && i.value >= 1 && i.value <= 25);
+  document.getElementById('btn-evaluate').disabled = !allFilled || participants.length === 0;
+});
+
+// Parse forecasts
+document.getElementById('btn-parse').addEventListener('click', () => {
+  const raw = document.getElementById('forecasts-input').value.trim();
+  const errEl = document.getElementById('parse-error');
+  const statusEl = document.getElementById('parse-status');
+  errEl.classList.remove('visible');
+  statusEl.textContent = '';
+  participants = [];
+
+  if (!raw) {
+    errEl.textContent = 'Paste the data first.';
+    errEl.classList.add('visible');
+    return;
+  }
+
+  // Try to parse: supports multiple formats
+  // Format 1: Each line is a full JSON with name, email, forecast
+  // Format 2: Tab-separated columns from Google Sheets (timestamp, name, email, forecast_json)
+  const lines = raw.split('\n').filter(l => l.trim());
+
+  for (let idx = 0; idx < lines.length; idx++) {
+    const line = lines[idx].trim();
+    try {
+      // Try full JSON object first
+      const obj = JSON.parse(line);
+      if (obj.forecast && obj.name) {
+        participants.push({
+          name: obj.name,
+          email: obj.email || '',
+          forecast: parseForecast(obj.forecast)
+        });
+        continue;
+      }
+    } catch (e) {}
+
+    // Try tab-separated (Google Sheets copy-paste)
+    const parts = line.split('\t');
+    if (parts.length >= 3) {
+      // Find the part that looks like JSON array
+      let name = '', email = '', forecast = null;
+      for (const part of parts) {
+        const trimmed = part.trim();
+        if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+          try {
+            forecast = parseForecast(JSON.parse(trimmed));
+          } catch (e) {}
+        } else if (trimmed.includes('@')) {
+          email = trimmed;
+        } else if (!name && trimmed && !/^\d{4}/.test(trimmed) && !/^\d+\//.test(trimmed)) {
+          name = trimmed;
+        }
+      }
+      if (name && forecast) {
+        participants.push({ name, email, forecast });
+        continue;
+      }
+    }
+
+    // Skip header rows or empty lines silently
+    if (idx === 0 && (line.toLowerCase().includes('timestamp') || line.toLowerCase().includes('name'))) {
+      continue;
+    }
+  }
+
+  if (participants.length === 0) {
+    errEl.textContent = 'Could not parse any forecasts. Check the format.';
+    errEl.classList.add('visible');
+  } else {
+    statusEl.textContent = `Parsed ${participants.length} participant${participants.length > 1 ? 's' : ''}.`;
+    // Enable evaluate if actuals also filled
+    grid.dispatchEvent(new Event('input'));
+  }
+});
+
+function parseForecast(data) {
+  // Normalize forecast into { country: position } map
+  const map = {};
+  if (Array.isArray(data)) {
+    data.forEach(item => {
+      if (item.country && item.position) {
+        map[item.country] = parseInt(item.position);
+      }
+    });
+  } else if (typeof data === 'object') {
+    for (const [k, v] of Object.entries(data)) {
+      if (typeof v === 'number') map[k] = v;
+    }
+  }
+  return map;
+}
+
+// Evaluate
+document.getElementById('btn-evaluate').addEventListener('click', () => {
+  const actual = {};
+  grid.querySelectorAll('input').forEach(inp => {
+    actual[inp.dataset.country] = parseInt(inp.value);
+  });
+
+  // Score each participant
+  const scored = participants.map(p => {
+    let totalDiff = 0;
+    const details = [];
+
+    COUNTRIES.forEach(c => {
+      const predicted = p.forecast[c.country] || 0;
+      const real = actual[c.country] || 0;
+      const diff = Math.abs(predicted - real);
+      totalDiff += diff;
+      details.push({
+        country: c.country,
+        flag: c.flag,
+        predicted,
+        actual: real,
+        diff
+      });
+    });
+
+    return { ...p, score: totalDiff, details };
+  });
+
+  // Sort by score (lowest = best)
+  scored.sort((a, b) => a.score - b.score);
+
+  // Render leaderboard
+  const tbody = document.getElementById('leaderboard-body');
+  tbody.innerHTML = '';
+
+  const medals = ['', '\ud83e\udd47', '\ud83e\udd48', '\ud83e\udd49'];
+
+  scored.forEach((p, idx) => {
+    const rank = idx + 1;
+    const medal = medals[rank] || '';
+    const rankClass = rank <= 3 ? `rank-${rank}` : '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="rank ${rankClass}">${medal} ${rank}</td>
+      <td>${p.name}</td>
+      <td>${p.email}</td>
+      <td class="score">${p.score}</td>
+      <td><span class="detail-toggle" data-idx="${idx}">details</span></td>
+    `;
+    tbody.appendChild(tr);
+
+    // Detail row
+    const detailTr = document.createElement('tr');
+    detailTr.className = 'detail-row';
+    detailTr.id = `detail-${idx}`;
+
+    let detailHtml = '<td colspan="5"><table class="detail-table">';
+    detailHtml += '<tr><td><strong>Country</strong></td><td><strong>Predicted</strong></td><td><strong>Actual</strong></td><td><strong>Diff</strong></td></tr>';
+
+    p.details.sort((a, b) => a.diff - b.diff).forEach(d => {
+      const cls = d.diff === 0 ? 'exact' : d.diff <= 3 ? 'close' : 'far';
+      detailHtml += `<tr><td>${d.flag} ${d.country}</td><td>${d.predicted || '—'}</td><td>${d.actual}</td><td class="${cls}">${d.diff === 0 ? 'EXACT!' : '+' + d.diff}</td></tr>`;
+    });
+
+    detailHtml += '</table></td>';
+    detailTr.innerHTML = detailHtml;
+    tbody.appendChild(detailTr);
+  });
+
+  // Toggle details
+  tbody.querySelectorAll('.detail-toggle').forEach(el => {
+    el.addEventListener('click', () => {
+      const row = document.getElementById(`detail-${el.dataset.idx}`);
+      row.classList.toggle('visible');
+      el.textContent = row.classList.contains('visible') ? 'hide' : 'details';
+    });
+  });
+
+  document.getElementById('results-section').classList.add('visible');
+  document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+});
+</script>
+
+</body>
+</html>
