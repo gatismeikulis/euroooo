@@ -864,6 +864,7 @@ function renderTable() {
       saveState();
       highlightDuplicates();
       updateProgress();
+      highlightUsedOptions();
     });
 
     tdPos.appendChild(select);
@@ -890,6 +891,24 @@ function renderTable() {
   });
 
   highlightDuplicates();
+  highlightUsedOptions();
+}
+
+function highlightUsedOptions() {
+  const usedPositions = new Set(Object.values(state.positions));
+  document.querySelectorAll('.position-select').forEach(select => {
+    const currentVal = parseInt(select.value);
+    select.querySelectorAll('option').forEach(opt => {
+      const val = parseInt(opt.value);
+      if (val && usedPositions.has(val) && val !== currentVal) {
+        opt.style.backgroundColor = '#ffe0e0';
+        opt.style.color = '#aa3333';
+      } else {
+        opt.style.backgroundColor = '';
+        opt.style.color = '';
+      }
+    });
+  });
 }
 
 function highlightDuplicates() {
