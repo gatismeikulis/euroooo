@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eurovision 2026 Forecast</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff006e, #ff7b00, #ffbe0b, #06d6a0, #118ab2, #8338ec, #ff006e);
+    background-size: 400% 400%;
+    animation: rainbowBg 8s ease infinite;
+    overflow-x: hidden;
+  }
+
+  @keyframes rainbowBg {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ===== SPARKLE OVERLAY ===== */
+  .sparkles {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .sparkle {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: white;
+    border-radius: 50%;
+    animation: sparkleAnim 2s ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes sparkleAnim {
+    0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1) rotate(180deg); }
+  }
+
+  /* ===== VIEW 1 - REGISTRATION ===== */
+  .view { display: none; }
+  .view.active { display: flex; flex-direction: column; align-items: center; }
+
+  #view-register {
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-container {
+    text-align: center;
+    margin-bottom: 2rem;
+    animation: logoFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes logoFloat {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-15px) rotate(1deg); }
+  }
+
+  .logo-stars {
+    font-size: 3rem;
+    display: block;
+    animation: starSpin 4s linear infinite;
+  }
+  @keyframes starSpin {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  .logo-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    color: white;
+    text-shadow:
+      0 0 10px rgba(255,255,255,0.8),
+      0 0 20px rgba(255,255,255,0.6),
+      0 0 40px rgba(255,0,110,0.8),
+      0 0 80px rgba(255,0,110,0.4),
+      3px 3px 0 #8338ec;
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+
+  .logo-subtitle {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    color: #ffbe0b;
+    text-shadow: 2px 2px 0 #ff006e;
+    margin-top: 0.5rem;
+    animation: subtitlePulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes subtitlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .logo-year {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: white;
+    background: linear-gradient(90deg, #ff006e, #8338ec, #06d6a0, #ffbe0b);
+    background-size: 300% 100%;
+    animation: yearShimmer 3s linear infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 0.3rem;
+  }
+
+  @keyframes yearShimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+
+  .rainbow-divider {
+    width: 80%;
+    max-width: 400px;
+    height: 4px;
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    border-radius: 2px;
+    margin: 1.5rem 0;
+    animation: rainbowSlide 2s linear infinite;
+    background-size: 200% 100%;
+  }
+
+  @keyframes rainbowSlide {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+  }
+
+  .register-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 90%;
+    max-width: 460px;
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.3),
+      0 0 30px rgba(131,56,236,0.3),
+      inset 0 0 30px rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .register-card::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: linear-gradient(45deg, #ff006e, #ffbe0b, #06d6a0, #8338ec, #ff006e);
+    background-size: 400% 400%;
+    animation: borderGlow 4s ease infinite;
+    z-index: -1;
+    border-radius: 22px;
+  }
+
+  @keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .register-card h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #8338ec;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: #8338ec;
+    box-shadow: 0 0 15px rgba(131,56,236,0.2);
+  }
+
+  .rules-box {
+    background: linear-gradient(135deg, #fff5f5, #f5f0ff);
+    border: 2px dashed #ff006e;
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .rules-box h3 {
+    color: #ff006e;
+    font-family: 'Fredoka One', cursive;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .rules-box ul {
+    list-style: none;
+    padding: 0;
+  }
+  .rules-box ul li::before {
+    content: '🌟 ';
+  }
+
+  .agree-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 1.2rem 0;
+    font-size: 0.85rem;
+    color: #666;
+    cursor: pointer;
+  }
+
+  .agree-label input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: #8338ec;
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-fabulous {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    color: white;
+    background: linear-gradient(135deg, #ff006e, #8338ec);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 20px rgba(131,56,236,0.4);
+    letter-spacing: 1px;
+  }
+
+  .btn-fabulous:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(131,56,236,0.5);
+  }
+
+  .btn-fabulous:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn-fabulous:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ===== VIEW 2 - FORECAST TABLE ===== */
+  #view-forecast {
+    min-height: 100vh;
+    padding: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .forecast-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .forecast-header h1 {
+    font-family: 'Fredoka One', cursive;
+    color: white;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    text-shadow: 2px 2px 0 #8338ec;
+  }
+
+  .forecast-header .welcome-msg {
+    color: white;
+    font-size: 1rem;
+    margin-top: 0.3rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .table-container {
+    background: rgba(255,255,255,0.95);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .forecast-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .forecast-table thead th {
+    background: linear-gradient(135deg, #8338ec, #ff006e);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    padding: 1rem 0.8rem;
+    font-size: 0.95rem;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .forecast-table tbody tr {
+    transition: background 0.3s;
+  }
+
+  .forecast-table tbody tr:nth-child(even) {
+    background: rgba(131,56,236,0.04);
+  }
+
+  .forecast-table tbody tr.filled {
+    background: rgba(6,214,160,0.08);
+  }
+
+  .forecast-table tbody tr.duplicate-warning {
+    background: rgba(255,190,11,0.12) !important;
+  }
+
+  .forecast-table td {
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    vertical-align: middle;
+  }
+
+  .country-cell {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .country-cell .flag {
+    margin-right: 0.4rem;
+    font-size: 1.2rem;
+  }
+
+  .artist-cell {
+    color: #555;
+  }
+
+  .artist-cell .artist-name {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .artist-cell .song-name {
+    font-style: italic;
+    color: #8338ec;
+  }
+
+  .comment-input {
+    width: 100%;
+    min-width: 120px;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    transition: border-color 0.3s;
+  }
+
+  .comment-input:focus {
+    outline: none;
+    border-color: #8338ec;
+  }
+
+  .position-select {
+    padding: 0.4rem 0.6rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    min-width: 60px;
+    transition: border-color 0.3s;
+    background: white;
+  }
+
+  .position-select:focus {
+    outline: none;
+    border-color: #8338ec;
+  }
+
+  .position-select.duplicate {
+    border-color: #e0a800;
+    background: #fffbeb;
+  }
+
+  .submit-bar {
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .progress-text {
+    color: white;
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .btn-submit-forecast {
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    color: white;
+    background: linear-gradient(135deg, #06d6a0, #118ab2);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 20px rgba(6,214,160,0.4);
+    letter-spacing: 1px;
+  }
+
+  .btn-submit-forecast:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(6,214,160,0.5);
+  }
+
+  .btn-submit-forecast:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #999;
+    box-shadow: none;
+  }
+
+  .logout-link {
+    color: rgba(255,255,255,0.8);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    display: inline-block;
+  }
+  .logout-link:hover { color: white; }
+
+  /* ===== COUNTDOWN ===== */
+  .countdown-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .countdown-bar .cd-icon { font-size: 1.1rem; }
+
+  .countdown-bar .cd-time {
+    color: #ffbe0b;
+    font-size: 1.2rem;
+  }
+
+  .countdown-bar.expired {
+    background: rgba(255,0,110,0.9);
+  }
+
+  .countdown-bar.expired .cd-time {
+    color: white;
+  }
+
+  /* Push content below fixed bar */
+  #view-register { padding-top: 3.5rem; }
+  #view-forecast { padding-top: 3.5rem; }
+
+  /* ===== CONFETTI ===== */
+  .confetti-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    overflow: hidden;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    animation: confettiFall 3s ease-in forwards;
+  }
+
+  @keyframes confettiFall {
+    0% { top: -20px; opacity: 1; transform: rotate(0deg) translateX(0); }
+    100% { top: 110vh; opacity: 0; transform: rotate(720deg) translateX(100px); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    #view-forecast { padding: 0.8rem 0; }
+
+    .forecast-header { padding: 0 0.5rem; }
+
+    .register-card { padding: 1.5rem; width: 95%; }
+
+    /* Hide table header on mobile */
+    .forecast-table thead { display: none; }
+
+    .forecast-table tbody tr {
+      display: block;
+      background: rgba(255,255,255,0.6);
+      border-radius: 0;
+      margin-bottom: 2px;
+      padding: 1rem;
+      box-shadow: none;
+      border-left: 4px solid #ccc;
+      width: 100%;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .forecast-table tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.6);
+    }
+
+    .forecast-table tbody tr.filled {
+      background: rgba(255,255,255,0.95);
+      border-left-color: #06d6a0;
+    }
+
+    .forecast-table tbody tr.duplicate-warning {
+      border-left-color: #e0a800;
+      background: rgba(255,255,255,0.9) !important;
+    }
+
+    .forecast-table td {
+      display: block;
+      border: none;
+      padding: 0.3rem 0;
+    }
+
+    .country-cell {
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .artist-cell {
+      margin-bottom: 0.6rem;
+    }
+
+    .artist-cell .artist-name { font-size: 0.9rem; }
+    .artist-cell .song-name { font-size: 0.85rem; }
+
+    /* Comment & position side by side on mobile */
+    .mobile-row {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .comment-input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .position-select {
+      width: 70px;
+      padding: 0.6rem;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .table-container {
+      background: transparent;
+      box-shadow: none;
+      border-radius: 0;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .forecast-table {
+      width: 100%;
+    }
+
+    .btn-submit-forecast {
+      width: 100%;
+      font-size: 1.1rem;
+    }
+
+    .submit-bar { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Countdown bar -->
+<div class="countdown-bar" id="countdown-bar">
+  <span class="cd-icon">⏳</span>
+  <span>Submissions close in</span>
+  <span class="cd-time" id="cd-time">--:--:--</span>
+</div>
+
+<!-- Sparkle overlay -->
+<div class="sparkles" id="sparkles"></div>
+
+<!-- ===== VIEW 1: REGISTRATION ===== -->
+<div id="view-register" class="view active">
+  <div class="logo-container">
+    <span class="logo-stars">✨🎤🌈🎶✨</span>
+    <div class="logo-title">EUROVISION</div>
+    <div class="logo-subtitle">Forecast Extravaganza!</div>
+    <div class="logo-year">🇦🇹 Vienna 2026 🇦🇹</div>
+  </div>
+
+  <div class="rainbow-divider"></div>
+
+  <div class="register-card">
+    <h2>Join the Madness! 🎉</h2>
+
+    <div class="form-group">
+      <label for="input-name">Your Name</label>
+      <input type="text" id="input-name" placeholder="e.g. Conchita Wurst Jr.">
+    </div>
+
+    <div class="form-group">
+      <label for="input-email">Your Email</label>
+      <input type="email" id="input-email" placeholder="e.g. douze.points@eurovision.fan">
+    </div>
+
+    <div class="rules-box">
+      <h3>The Rules 📜</h3>
+      <ul>
+        <li>Predict the finishing position (1–25) for each country</li>
+        <li>You may assign the same position to multiple countries (we won't judge… much)</li>
+        <li>Add spicy comments — it's Eurovision, darling!</li>
+        <li>Once you're happy, submit your forecast — your answers will be sent to the judges</li>
+        <li>Results will be revealed once the winner is determined. No take-backs!</li>
+      </ul>
+    </div>
+
+    <label class="agree-label">
+      <input type="checkbox" id="agree-check">
+      <span>By clicking Submit, I agree to take part in this Eurovision craziness!</span>
+    </label>
+
+    <button class="btn-fabulous" id="btn-enter" disabled>LET'S GO! 🚀</button>
+  </div>
+</div>
+
+<!-- ===== VIEW 2: FORECAST TABLE ===== -->
+<div id="view-forecast" class="view">
+  <div class="forecast-header">
+    <h1>🎤 Your Eurovision 2026 Forecast 🏆</h1>
+    <div class="welcome-msg" id="welcome-msg"></div>
+  </div>
+
+  <div class="table-container">
+    <table class="forecast-table">
+      <thead>
+        <tr>
+          <th>Country</th>
+          <th>Artist & Song</th>
+          <th>Your Comment</th>
+          <th>Position</th>
+        </tr>
+      </thead>
+      <tbody id="forecast-body"></tbody>
+    </table>
+  </div>
+
+  <div class="submit-bar">
+    <div class="progress-text" id="progress-text">0 / 25 positions assigned</div>
+    <button class="btn-submit-forecast" id="btn-submit" disabled>SUBMIT FORECAST 🏆</button>
+    <br>
+    <span class="logout-link" id="btn-logout">Log out & start over</span>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const FINALISTS = [
+  { country: "Denmark", flag: "🇩🇰", artist: "Søren Torpegaard Lund", song: "Før Vi Går Hjem" },
+  { country: "Germany", flag: "🇩🇪", artist: "Sarah Engels", song: "Fire" },
+  { country: "Israel", flag: "🇮🇱", artist: "Noam Bettan", song: "Michelle" },
+  { country: "Belgium", flag: "🇧🇪", artist: "ESSYLA", song: "Dancing on the Ice" },
+  { country: "Albania", flag: "🇦🇱", artist: "Alis", song: "Nân" },
+  { country: "Greece", flag: "🇬🇷", artist: "Akylas", song: "Ferto" },
+  { country: "Ukraine", flag: "🇺🇦", artist: "LELÉKA", song: "Ridnym" },
+  { country: "Australia", flag: "🇦🇺", artist: "Delta Goodrem", song: "Eclipse" },
+  { country: "Serbia", flag: "🇷🇸", artist: "LAVINA", song: "Kraj Mene" },
+  { country: "Malta", flag: "🇲🇹", artist: "AIDAN", song: "Bella" },
+  { country: "Czechia", flag: "🇨🇿", artist: "Daniel Žižka", song: "CROSSROADS" },
+  { country: "Bulgaria", flag: "🇧🇬", artist: "DARA", song: "Bangaranga" },
+  { country: "Croatia", flag: "🇭🇷", artist: "LELEK", song: "Andromeda" },
+  { country: "United Kingdom", flag: "🇬🇧", artist: "LOOK MUM NO COMPUTER", song: "Eins, Zwei, Drei" },
+  { country: "France", flag: "🇫🇷", artist: "Monroe", song: "Regarde !" },
+  { country: "Moldova", flag: "🇲🇩", artist: "Satoshi", song: "Viva, Moldova!" },
+  { country: "Finland", flag: "🇫🇮", artist: "Linda Lampenius x Pete Parkkonen", song: "Liekinheitin" },
+  { country: "Poland", flag: "🇵🇱", artist: "ALICJA", song: "Pray" },
+  { country: "Lithuania", flag: "🇱🇹", artist: "Lion Ceccah", song: "Sólo Quiero Más" },
+  { country: "Sweden", flag: "🇸🇪", artist: "FELICIA", song: "My System" },
+  { country: "Cyprus", flag: "🇨🇾", artist: "Antigoni", song: "JALLA" },
+  { country: "Italy", flag: "🇮🇹", artist: "Sal Da Vinci", song: "Per Sempre Sì" },
+  { country: "Norway", flag: "🇳🇴", artist: "JONAS LOVV", song: "YA YA YA" },
+  { country: "Romania", flag: "🇷🇴", artist: "Alexandra Căpitănescu", song: "Choke Me" },
+  { country: "Austria", flag: "🇦🇹", artist: "COSMÓ", song: "Tanzschein" }
+];
+
+// ===== STATE =====
+let state = loadState();
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('eurovision2026'));
+    if (s && s.name) return s;
+  } catch (e) {}
+  return { name: '', email: '', comments: {}, positions: {}, submitted: false };
+}
+
+function saveState() {
+  localStorage.setItem('eurovision2026', JSON.stringify(state));
+}
+
+// ===== SPARKLES =====
+function createSparkles() {
+  const container = document.getElementById('sparkles');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    s.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    s.style.width = s.style.height = (3 + Math.random() * 6) + 'px';
+    container.appendChild(s);
+  }
+}
+createSparkles();
+
+// ===== NAVIGATION =====
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ===== VIEW 1 LOGIC =====
+const inputName = document.getElementById('input-name');
+const inputEmail = document.getElementById('input-email');
+const agreeCheck = document.getElementById('agree-check');
+const btnEnter = document.getElementById('btn-enter');
+
+function validateRegister() {
+  btnEnter.disabled = !(inputName.value.trim() && inputEmail.value.trim() && agreeCheck.checked);
+}
+
+inputName.addEventListener('input', validateRegister);
+inputEmail.addEventListener('input', validateRegister);
+agreeCheck.addEventListener('change', validateRegister);
+
+btnEnter.addEventListener('click', () => {
+  state.name = inputName.value.trim();
+  state.email = inputEmail.value.trim();
+  saveState();
+  showForecast();
+});
+
+// ===== VIEW 2 LOGIC =====
+function showForecast() {
+  showView('view-forecast');
+  document.getElementById('welcome-msg').textContent =
+    `Welcome, ${state.name}! Make your predictions below.`;
+  renderTable();
+  updateProgress();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('forecast-body');
+  tbody.innerHTML = '';
+
+  FINALISTS.forEach((entry, i) => {
+    const tr = document.createElement('tr');
+    tr.dataset.index = i;
+
+    // Country
+    const tdCountry = document.createElement('td');
+    tdCountry.className = 'country-cell';
+    tdCountry.innerHTML = `<span class="flag">${entry.flag}</span>${entry.country}`;
+
+    // Artist & Song
+    const tdArtist = document.createElement('td');
+    tdArtist.className = 'artist-cell';
+    tdArtist.innerHTML = `<span class="artist-name">${entry.artist}</span><br><span class="song-name">"${entry.song}"</span>`;
+
+    // Comment
+    const tdComment = document.createElement('td');
+    const commentInput = document.createElement('input');
+    commentInput.type = 'text';
+    commentInput.className = 'comment-input';
+    commentInput.placeholder = 'Spicy take...';
+    commentInput.value = state.comments[i] || '';
+    commentInput.addEventListener('input', () => {
+      state.comments[i] = commentInput.value;
+      saveState();
+    });
+    tdComment.appendChild(commentInput);
+
+    // Position dropdown
+    const tdPos = document.createElement('td');
+    const select = document.createElement('select');
+    select.className = 'position-select';
+    select.dataset.index = i;
+
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    defaultOpt.textContent = '—';
+    select.appendChild(defaultOpt);
+
+    for (let p = 1; p <= 25; p++) {
+      const opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = p;
+      if (state.positions[i] == p) opt.selected = true;
+      select.appendChild(opt);
+    }
+
+    select.addEventListener('change', () => {
+      if (select.value) {
+        state.positions[i] = parseInt(select.value);
+      } else {
+        delete state.positions[i];
+      }
+      saveState();
+      highlightDuplicates();
+      updateProgress();
+    });
+
+    tdPos.appendChild(select);
+
+    tr.appendChild(tdCountry);
+    tr.appendChild(tdArtist);
+
+    // On mobile: wrap comment+position in a flex container inside a single td
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile) {
+      const tdCombo = document.createElement('td');
+      const mobileRow = document.createElement('div');
+      mobileRow.className = 'mobile-row';
+      mobileRow.appendChild(commentInput);
+      mobileRow.appendChild(select);
+      tdCombo.appendChild(mobileRow);
+      tr.appendChild(tdCombo);
+    } else {
+      tr.appendChild(tdComment);
+      tr.appendChild(tdPos);
+    }
+
+    tbody.appendChild(tr);
+  });
+
+  highlightDuplicates();
+}
+
+function highlightDuplicates() {
+  // Count how many times each position is used
+  const counts = {};
+  Object.values(state.positions).forEach(pos => {
+    counts[pos] = (counts[pos] || 0) + 1;
+  });
+
+  const duplicatePositions = new Set(
+    Object.keys(counts).filter(k => counts[k] > 1).map(Number)
+  );
+
+  document.querySelectorAll('#forecast-body tr').forEach(tr => {
+    const i = tr.dataset.index;
+    const select = tr.querySelector('.position-select');
+    const pos = state.positions[i];
+
+    // Filled state
+    if (pos) {
+      tr.classList.add('filled');
+    } else {
+      tr.classList.remove('filled');
+    }
+
+    // Duplicate state
+    if (pos && duplicatePositions.has(pos)) {
+      tr.classList.add('duplicate-warning');
+      select.classList.add('duplicate');
+    } else {
+      tr.classList.remove('duplicate-warning');
+      select.classList.remove('duplicate');
+    }
+  });
+}
+
+function updateProgress() {
+  const assigned = Object.keys(state.positions).length;
+  document.getElementById('progress-text').textContent =
+    `${assigned} / 25 positions assigned`;
+  document.getElementById('btn-submit').disabled = assigned < 25;
+}
+
+// ===== SUBMIT =====
+document.getElementById('btn-submit').addEventListener('click', async () => {
+  if (state.submitted) {
+    alert('You already submitted your forecast!');
+    return;
+  }
+
+  const forecast = FINALISTS.map((entry, i) => ({
+    country: entry.country,
+    artist: entry.artist,
+    song: entry.song,
+    comment: state.comments[i] || '',
+    position: state.positions[i]
+  }));
+
+  const payload = {
+    name: state.name,
+    email: state.email,
+    forecast: forecast,
+    submittedAt: new Date().toISOString()
+  };
+
+  // Submit to Google Forms
+  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSecnoLDoRw2CdW3fECBGBEUH7D7hODaJXyLaqUEyFqXoukTbg/formResponse';
+
+  const formData = new URLSearchParams();
+  formData.append('entry.542490152', state.name);
+  formData.append('entry.97097816', state.email);
+  formData.append('entry.1430508022', JSON.stringify(forecast, null, 2));
+
+  try {
+    await fetch(FORM_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+  } catch (e) {
+    // no-cors means we can't read response, but data is sent
+  }
+
+  state.submitted = true;
+  saveState();
+
+  launchConfetti();
+  alert('🎉 Forecast submitted! May the douze points be with you! 🎤');
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('btn-submit').textContent = 'SUBMITTED ✅';
+});
+
+// ===== LOGOUT =====
+document.getElementById('btn-logout').addEventListener('click', () => {
+  if (confirm('This will clear all your data. Sure?')) {
+    localStorage.removeItem('eurovision2026');
+    state = { name: '', email: '', comments: {}, positions: {}, submitted: false };
+    inputName.value = '';
+    inputEmail.value = '';
+    agreeCheck.checked = false;
+    validateRegister();
+    showView('view-register');
+  }
+});
+
+// ===== CONFETTI =====
+function launchConfetti() {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+
+  const colors = ['#ff006e', '#ffbe0b', '#06d6a0', '#118ab2', '#8338ec', '#ff7b00'];
+
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 1 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (6 + Math.random() * 8) + 'px';
+    container.appendChild(piece);
+  }
+
+  setTimeout(() => container.remove(), 5000);
+}
+
+// ===== COUNTDOWN TIMER =====
+// Deadline: 2026-05-17 01:15:00 local time
+const DEADLINE = new Date(2026, 4, 17, 1, 15, 0); // month is 0-indexed
+
+function updateCountdown() {
+  const now = new Date();
+  const diff = DEADLINE - now;
+  const bar = document.getElementById('countdown-bar');
+  const timeEl = document.getElementById('cd-time');
+
+  if (diff <= 0) {
+    bar.classList.add('expired');
+    timeEl.textContent = 'CLOSED';
+    bar.querySelector('span:nth-child(2)').textContent = 'Submissions are';
+    // Disable submit + registration
+    document.getElementById('btn-submit').disabled = true;
+    document.getElementById('btn-enter').disabled = true;
+    return;
+  }
+
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+
+  const pad = n => String(n).padStart(2, '0');
+  timeEl.textContent = `${h}h ${pad(m)}m ${pad(s)}s`;
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ===== RE-RENDER ON RESIZE (mobile <-> desktop) =====
+let lastMobile = window.matchMedia('(max-width: 768px)').matches;
+window.addEventListener('resize', () => {
+  const nowMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (nowMobile !== lastMobile) {
+    lastMobile = nowMobile;
+    if (document.getElementById('view-forecast').classList.contains('active')) {
+      renderTable();
+      highlightDuplicates();
+    }
+  }
+});
+
+// ===== INIT =====
+if (state.name) {
+  showForecast();
+}
+</script>
+
+</body>
+</html>
